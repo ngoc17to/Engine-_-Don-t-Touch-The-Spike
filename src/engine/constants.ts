@@ -1,0 +1,1 @@
+export const GRAVITAIONAL_ACCELERATION = 600
