@@ -11,13 +11,16 @@ class Scene implements GameScene{
         this.objects = []
     }
 
-    public handleInput(): Scene | undefined {
+    public handleInput(): void {
         console.log("Handle Input");
-        return this
     }
 
     public onEnter(): void {
         console.log("Scene setup");
+    }
+
+    public onExit(): void {
+        console.log("Scene exit");
     }
 
     public addUIElement(element: UIElement): void {

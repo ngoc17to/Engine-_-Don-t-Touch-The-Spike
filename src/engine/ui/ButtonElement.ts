@@ -7,6 +7,7 @@ class ButtonElement extends UIElement{
     private buttonColor: string
     protected width: number
     protected height: number
+    protected radius: number
     private onClick: () => void
   
     constructor(
@@ -18,22 +19,36 @@ class ButtonElement extends UIElement{
         fontFamily: string,
         fontSize: number,
         buttonColor: string,
-        onClick: () => void
+        radius: number = 0
     ) {
         super(x, y)
         this.width = width
         this.height = height
         this.buttonColor = buttonColor
-        this.text = new TextElement(x, y, text, 'fff', fontSize, fontFamily)
-        this.onClick = onClick
+        this.radius = radius
+        this.text = new TextElement(x + width/2, y + height/2, text, '#fff', fontSize, fontFamily)
     }
-  
+      
     public render(ctx: CanvasRenderingContext2D): void {
         super.render(ctx)
 
-        ctx.beginPath()
-        ctx.fillStyle = this.buttonColor
-        ctx.fillRect(this.getPosition().x, this.getPosition().y, this.width, this.height)
+        ctx.beginPath();
+        ctx.fillStyle = this.buttonColor;
+        
+        const x = this.getPosition().x;
+        const y = this.getPosition().y;
+        const width = this.width;
+        const height = this.height;
+        const radius = 10; 
+        
+        ctx.moveTo(x + radius, y);
+        ctx.arcTo(x + width, y, x + width, y + height, radius);
+        ctx.arcTo(x + width, y + height, x, y + height, radius);
+        ctx.arcTo(x, y + height, x, y, radius);
+        ctx.arcTo(x, y, x + width, y, radius);
+        ctx.closePath();
+
+        ctx.fill();
 
         ctx.save()
         ctx.textBaseline = 'middle'
@@ -45,12 +60,12 @@ class ButtonElement extends UIElement{
         this.onClick = callback
     }
 
-    public handleClick(input: InputHandler) {
+    public handleClick(input: InputHandler): void {
         if(this.onClick){
             if(this.isHovering(input.getMousePosition().x, input.getMousePosition().y)
                 && input.isClicked()
             ){
-                this.onClick
+                this.onClick()
             }
         }
     }
@@ -61,7 +76,9 @@ class ButtonElement extends UIElement{
             x <= this.getPosition().x + this.width &&
             y >= this.getPosition().y &&
             y <= this.getPosition().y + this.height
-        ) return true
+        ){
+            return true
+        } 
         return false
     }
 }

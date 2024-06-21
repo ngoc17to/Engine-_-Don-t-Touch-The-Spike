@@ -8,8 +8,10 @@ class InputHandler {
       middle: false,
       right: false,
     };
-  
+    private canvas: HTMLCanvasElement
+
     private constructor(canvas: HTMLCanvasElement) {
+        this.canvas = canvas;
         // Keyboard handle
         window.addEventListener('keydown', (e) => {
             e.preventDefault();
@@ -21,15 +23,18 @@ class InputHandler {
         });
     
         // mouse handle
-        canvas.addEventListener('mousemove', (e) => {
-            this.mousePosition = { x: e.clientX, y: e.clientY };
+        this.canvas.addEventListener('mousemove', (e) => {
+            const bound = this.canvas.getBoundingClientRect()
+            const scaleX = this.canvas.width / bound.width
+            const scaleY = this.canvas.height / bound.height
+            this.mousePosition = { x: (e.clientX - bound.left) * scaleX, y: (e.clientY - bound.top) * scaleY };
         });
-        canvas.addEventListener('mousedown', (e) => {
+        this.canvas.addEventListener('mousedown', (e) => {
             this.mouseButtonStates[
             e.button === 0 ? 'left' : e.button === 1 ? 'middle' : 'right'
             ] = true;
         });
-        canvas.addEventListener('mouseup', (e) => {
+        this.canvas.addEventListener('mouseup', (e) => {
             this.mouseButtonStates[
             e.button === 0 ? 'left' : e.button === 1 ? 'middle' : 'right'
             ] = false;

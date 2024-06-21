@@ -3,8 +3,9 @@ import InputHandler from "../../engine/input/InputHandler";
 import TextElement from "../../engine/ui/TextElement";
 import Background from "../Background";
 import GameManager from "../GameManager";
-import StartScene from "./StartScene";
+import ReadyScene from "./ReadyScene";
 import Spike from "../Spike";
+import OverScene from "./OverScene";
 
 class PlayScene extends Scene {
     public static scene: PlayScene
@@ -21,21 +22,22 @@ class PlayScene extends Scene {
             this.spikes.forEach((spike) => {
                 this.game.spikePool.returnSpike(spike)
             })
-            console.log('asdasd')
             this.game.score.update()
             this.setupSpikes()
         });
     }
 
     public static getInstance(game: GameManager): PlayScene {
-        return this.scene || (this.scene = new PlayScene(game))
+        if(!this.scene) this.scene = new PlayScene(game)
+        this.scene.onEnter()
+         game.gameStart = true
+        return this.scene
     }
     
-    public handleInput(): Scene | undefined{
+    public handleInput(): void{
         const inputHandler = InputHandler.getInstance(this.game.canvasEl)
         if(inputHandler.isKeyDown(' ') || inputHandler.isClicked()){
             this.game.bird.jump()
-            return undefined
         }
     }
 
@@ -59,6 +61,7 @@ class PlayScene extends Scene {
     }
 
     public onEnter(): void{
+        console.log("play")
         this.game.bird.setState('play')
         this.game.background = Background.getInstance(this.game.gameData)
         this.setupSpikes()
@@ -98,9 +101,10 @@ class PlayScene extends Scene {
         }
 
         if(collisionFlag){       
+            this.game.gameStart = false
+            this.game.gameOver = true
             this.onExit()     
-            this.game.currentScene = StartScene.getInstance(this.game)
-            this.game.currentScene.onEnter()
+            this.game.currentScene = OverScene.getInstance(this.game)
         }
     }
 

@@ -8,7 +8,7 @@ class Bird extends GameObject{
 
     private gameData: GameData
     private sprites: {[direction: string]: AnimatedSprite} = {}
-    private state: 'start' | 'play'
+    private state: 'start' | 'play' | 'dead'
     private isGoingUp: boolean
     private onDirectionChange: Event
 
@@ -53,8 +53,12 @@ class Bird extends GameObject{
         }
     }
 
-    public setState(state: 'start' | 'play'): void{
+    public setState(state: 'start' | 'play' | 'dead'): void{
         this.state = state
+    }
+
+    public getState(): 'start' | 'play' | 'dead'{
+        return this.state
     }
 
     public changeDirection(): void {
@@ -76,7 +80,7 @@ class Bird extends GameObject{
                 if(this.getPosition().x + this.width > this.gameData.screenWidth) this.changeDirection()
             }
         }
-        else{
+        else if(this.state === 'start'){
             if (this.isGoingUp) {
                 // Bay lên
                 this.updateVelocity(-0.5)
@@ -91,6 +95,9 @@ class Bird extends GameObject{
                 }
             }
             this.updateYPosition(this.velocity)
+        }
+        else{
+
         }
         this.setBoxCollider(this.width, this.height, this.getPosition().x, this.getPosition().y)
     }

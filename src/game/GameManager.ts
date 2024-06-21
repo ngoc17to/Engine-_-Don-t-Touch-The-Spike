@@ -3,8 +3,7 @@ import Scene from "../engine/core/Scene"
 import { GameData } from "../types/general"
 import Background from "./Background"
 import Bird from "./Bird"
-import StartScene from "./scene/StartScene"
-import Spike from "./Spike"
+import ReadyScene from "./scene/ReadyScene"
 import SpikePool from "./SpikePool"
 
 class GameManager {
@@ -17,7 +16,9 @@ class GameManager {
     public spikePool: SpikePool
     public background: Background
     public score: GameScore
-  
+    public gameStart: boolean
+    public gameOver: boolean
+    
     private constructor(canvasEl: HTMLCanvasElement) {
         if (GameManager.instance) {
             return GameManager.instance
@@ -34,10 +35,11 @@ class GameManager {
                 direction: "RIGHT",
             }
         }
+        this.gameStart = false
+        this.gameOver = false
         this.score = new GameScore()
         this.bird = Bird.getInstance(this.gameData)
-        this.currentScene = StartScene.getInstance(this)
-        this.currentScene.addGameObject(this.bird)
+        this.currentScene = ReadyScene.getInstance(this)
         this.spikePool = SpikePool.getInstance(5, this.gameData)
         this.currentScene.onEnter()
     }
@@ -46,16 +48,12 @@ class GameManager {
         return this.instance || (this.instance = new GameManager(canvasEl))
     }
   
-    public render(context: CanvasRenderingContext2D, delta: number): void {        
+    public render(context: CanvasRenderingContext2D, delta: number): void {    
         this.currentScene?.render(context, delta)
     }
 
     public handleInput(): void {
-        const newScene = this.currentScene?.handleInput()
-        if(newScene){
-            this.currentScene = newScene
-            this.currentScene?.onEnter()
-        }
+        this.currentScene?.handleInput()
     }
 }
 

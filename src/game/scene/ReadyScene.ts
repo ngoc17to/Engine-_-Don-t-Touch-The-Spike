@@ -2,12 +2,11 @@ import Scene from "../../engine/core/Scene";
 import InputHandler from "../../engine/input/InputHandler";
 import TextElement from "../../engine/ui/TextElement";
 import Background from "../Background";
-import Bird from "../Bird";
 import GameManager from "../GameManager";
 import PlayScene from "./PlayScene";
 
-class StartScene extends Scene {
-    public static scene: StartScene
+class ReadyScene extends Scene {
+    public static scene: ReadyScene
     private game: GameManager
     private text: TextElement[]
 
@@ -15,22 +14,28 @@ class StartScene extends Scene {
         super()
         this.game = game;
         this.text = [];
+        this.addGameObject(this.game.bird)
         console.log('start scene')
     }
 
-    public static getInstance(game: GameManager): StartScene {
-        return this.scene || (this.scene = new StartScene(game))
+    public static getInstance(game: GameManager): ReadyScene {        
+        if(!this.scene) this.scene = new ReadyScene(game)
+        this.scene.onEnter()
+        game.gameStart = false
+        game.gameOver = false
+        return this.scene
     }
 
-    public handleInput(): Scene | undefined{
+    public handleInput(): void{
         const inputHandler = InputHandler.getInstance(this.game.canvasEl)
-        if(inputHandler.isKeyDown(" ") || inputHandler.isClicked()){  
+        if((inputHandler.isKeyDown(" ") || inputHandler.isClicked())){ 
             this.onExit()
-            return PlayScene.getInstance(this.game)
+            this.game.currentScene = PlayScene.getInstance(this.game)
         }
     }
 
     public onEnter(): void{
+        console.log("Ready")
         this.game.bird.setState('start')
         this.game.background = Background.getInstance(this.game.gameData)
         const screenWidth = this.game.gameData.screenWidth
@@ -80,6 +85,7 @@ class StartScene extends Scene {
     }
 
     public render(ctx: CanvasRenderingContext2D, delta: number):void{
+        this.handleInput
         this.game.background.render()
         this.game.bird.render(ctx, delta)
         for (const textElement of this.text) {
@@ -88,4 +94,4 @@ class StartScene extends Scene {
     }
 }
 
-export default StartScene
+export default ReadyScene

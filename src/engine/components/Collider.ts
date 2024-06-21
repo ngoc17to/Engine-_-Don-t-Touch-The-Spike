@@ -106,26 +106,6 @@ export class TriangleCollider extends Collider {
 
     public checkCollisionTriangle(other: TriangleCollider): boolean {
         // Implement triangle-triangle intersection logic
-        // const vertices1 = this.getVertices();
-        // const vertices2 = other.getVertices();
-
-        // for (let i = 0; i < 3; i++) {
-        //     const edge1 = {
-        //         start: vertices1[i],
-        //         end: vertices1[(i + 1) % 3],
-        //     };
-
-        //     for (let j = 0; j < 3; j++) {
-        //         const edge2 = {
-        //             start: vertices2[j],
-        //             end: vertices2[(j + 1) % 3],
-        //         };
-
-        //         if (this.checkIntersection(edge1.start, edge1.end, edge2.start, edge2.end)) {
-        //             return true;
-        //         }
-        //     }
-        // }
 
         return false;
     }

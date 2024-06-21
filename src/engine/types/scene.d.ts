@@ -8,5 +8,6 @@ export interface GameScene{
     update(deltaTime: number): void
     render(ctx: CanvasRenderingContext2D, delta: number): void
     onEnter(): void
-    handleInput(): Scene | undefined
+    onExit(): void
+    handleInput(): void
 }
