@@ -4,7 +4,6 @@ class Background{
     private static background: Background
     private backgroundColor: string
     private gameData: GameData
-    // private state: 'start' | 'play' | 'over'
 
     constructor(gameData: GameData) {
         this.backgroundColor = '#EBEBEB'
@@ -36,29 +35,6 @@ class Background{
             circle.src = "../assets/images/circle.png"
             context.drawImage(circle, centerX - screenWidth/4, centerY - screenWidth/4, screenWidth/2, screenWidth/2)
 
-            // if(this.state == "play"){
-            //     context.fillStyle = this.backgroundColor
-            //     context.font = '120px "Saira Semi Condensed", sans-serif'
-            //     context.textAlign = 'center';
-            //     context.textBaseline = 'middle';
-            //     const renderScore = score < 10 ? `0${score}` : score.toString()
-
-            //     context.fillText(renderScore, centerX, centerY);
-            // }
-            // else if(this.state == "start"){
-            //     context.fillStyle = "gray"
-            //     context.font = '500 40px "Saira Semi Condensed", sans-serif'
-            //     context.fillText("DON'T TOUCH THE SPIKE", centerX, screenHeight/9 + 100)
-
-            //     context.fillStyle = "#FF3464"
-            //     context.font = '24px "Saira Semi Condensed", sans-serif'
-            //     context.fillText("Click to jump", centerX, centerY - 50)
-            // }
-            // if(this.gameData.gameOver){
-            //     const gameoverButton = new Image()
-            //     gameoverButton.src = "../assets/images/Button.png"
-            //     context.drawImage(gameoverButton, 0, 0, 240, 150)
-            // }
         }
     }
 }

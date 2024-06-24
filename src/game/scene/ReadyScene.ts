@@ -8,12 +8,14 @@ import PlayScene from "./PlayScene";
 class ReadyScene extends Scene {
     public static scene: ReadyScene
     private game: GameManager
-    private text: TextElement[]
+    private gameTitle: TextElement
+    private gameInstruction: TextElement
+    private lastScore: TextElement
+    private highestScore: TextElement
 
     constructor(game: GameManager){
         super()
         this.game = game;
-        this.text = [];
         this.addGameObject(this.game.bird)
         console.log('start scene')
     }
@@ -21,26 +23,29 @@ class ReadyScene extends Scene {
     public static getInstance(game: GameManager): ReadyScene {        
         if(!this.scene) this.scene = new ReadyScene(game)
         this.scene.onEnter()
-        game.gameStart = false
-        game.gameOver = false
         return this.scene
     }
 
     public handleInput(): void{
-        const inputHandler = InputHandler.getInstance(this.game.canvasEl)
-        if((inputHandler.isKeyDown(" ") || inputHandler.isClicked())){ 
-            this.onExit()
-            this.game.currentScene = PlayScene.getInstance(this.game)
+        let isStart = true
+        this.game.canvasEl.addEventListener('onReplay', () => { 
+            isStart = false
+        });
+        if(isStart){
+            const inputHandler = InputHandler.getInstance(this.game.canvasEl)
+            if((inputHandler.isKeyDown(" ") || inputHandler.isMouseDown())){ 
+                this.onExit()
+                this.game.currentScene = PlayScene.getInstance(this.game)
+            }
         }
     }
 
     public onEnter(): void{
-        console.log("Ready")
         this.game.bird.setState('start')
         this.game.background = Background.getInstance(this.game.gameData)
         const screenWidth = this.game.gameData.screenWidth
         const screenHeight = this.game.gameData.screenHeight
-        const gameTitle = new TextElement(
+        this.gameTitle = new TextElement(
             screenWidth/2,
             screenHeight/9 + 100,
             "DON'T TOUCH THE SPIKE",
@@ -49,7 +54,7 @@ class ReadyScene extends Scene {
             "Saira Semi Condensed",
             {center: true}
         )
-        const gameInstruction = new TextElement(
+        this.gameInstruction = new TextElement(
             screenWidth/2,
             screenHeight/2 - 50,
             "Click to jump",
@@ -58,7 +63,7 @@ class ReadyScene extends Scene {
             "Saira Semi Condensed",
             {center: true}
         )
-        const lastScore = new TextElement(
+        this.lastScore = new TextElement(
             screenWidth/2,
             screenHeight/2 + 130,
             `Last Score: ${this.game.score.getScore()}`,
@@ -67,7 +72,7 @@ class ReadyScene extends Scene {
             "Arial",
             {center: true}
         )
-        const highestScore = new TextElement(
+        this.highestScore = new TextElement(
             screenWidth/2,
             screenHeight/2 + 160,
             `Highest Score: ${this.game.score.getHighestScore()}`,
@@ -76,21 +81,20 @@ class ReadyScene extends Scene {
             "Arial",
             {center: true}
         )
-        this.text.push(gameTitle, gameInstruction, lastScore, highestScore)
     }
 
     public onExit(): void {
         this.game.score.resetScore();
-        this.text = [];
     }
 
     public render(ctx: CanvasRenderingContext2D, delta: number):void{
         this.handleInput
         this.game.background.render()
         this.game.bird.render(ctx, delta)
-        for (const textElement of this.text) {
-            textElement.render(ctx);
-        }
+        this.gameTitle.render(ctx)
+        this.gameInstruction.render(ctx)
+        this.lastScore.render(ctx)
+        this.highestScore.render(ctx)
     }
 }
 

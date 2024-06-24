@@ -30,13 +30,12 @@ class PlayScene extends Scene {
     public static getInstance(game: GameManager): PlayScene {
         if(!this.scene) this.scene = new PlayScene(game)
         this.scene.onEnter()
-         game.gameStart = true
         return this.scene
     }
     
     public handleInput(): void{
         const inputHandler = InputHandler.getInstance(this.game.canvasEl)
-        if(inputHandler.isKeyDown(' ') || inputHandler.isClicked()){
+        if(inputHandler.isKeyDown(' ') || inputHandler.isMouseDown()){
             this.game.bird.jump()
         }
     }
@@ -61,7 +60,6 @@ class PlayScene extends Scene {
     }
 
     public onEnter(): void{
-        console.log("play")
         this.game.bird.setState('play')
         this.game.background = Background.getInstance(this.game.gameData)
         this.setupSpikes()
@@ -101,8 +99,6 @@ class PlayScene extends Scene {
         }
 
         if(collisionFlag){       
-            this.game.gameStart = false
-            this.game.gameOver = true
             this.onExit()     
             this.game.currentScene = OverScene.getInstance(this.game)
         }

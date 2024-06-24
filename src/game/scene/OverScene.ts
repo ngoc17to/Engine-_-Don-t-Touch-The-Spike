@@ -11,25 +11,19 @@ class OverScene extends Scene {
     private game: GameManager
     private scoreButton: ButtonElement
     private replayButton: ButtonElement
+    private onReplay: Event
+
 
     constructor(game: GameManager){
         super()
         this.game = game;
-        console.log('game over scene')
+        this.onReplay = new CustomEvent('onReplay');
     }
 
     public static getInstance(game: GameManager): OverScene {
         if(!this.scene) this.scene = new OverScene(game)
         this.scene.onEnter()
         return this.scene
-    }
-
-    public handleInput(): void{
-        const inputHandler = InputHandler.getInstance(this.game.canvasEl)
-        if(inputHandler.isKeyDown(" ")){  
-            this.onExit()
-            this.game.currentScene = ReadyScene.getInstance(this.game)
-        }
     }
 
     public onEnter(): void{
@@ -59,6 +53,7 @@ class OverScene extends Scene {
             5
         )
         const onClick = () => {
+            this.game.canvasEl.dispatchEvent(this.onReplay);
             this.onExit()     
             this.game.currentScene = ReadyScene.getInstance(this.game)
         }
@@ -66,10 +61,12 @@ class OverScene extends Scene {
     }
 
     public onExit(): void {
-        this.game.score.resetScore();
+        const inputHandler = InputHandler.getInstance(this.game.canvasEl)
+        this.replayButton.setPosition(-200, -40)
     }
 
-    public update(deltaTime: number): void {
+    public update(deltaTime: number): void 
+    {
         this.replayButton.handleClick(InputHandler.getInstance(this.game.canvasEl));
     }
 

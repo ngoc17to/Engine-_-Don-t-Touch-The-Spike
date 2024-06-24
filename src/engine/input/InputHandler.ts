@@ -8,7 +8,8 @@ class InputHandler {
       middle: false,
       right: false,
     };
-    private canvas: HTMLCanvasElement
+    private mouseClickStates: boolean
+    public canvas: HTMLCanvasElement
 
     private constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
@@ -29,12 +30,15 @@ class InputHandler {
             const scaleY = this.canvas.height / bound.height
             this.mousePosition = { x: (e.clientX - bound.left) * scaleX, y: (e.clientY - bound.top) * scaleY };
         });
+
         this.canvas.addEventListener('mousedown', (e) => {
+            e.preventDefault();
             this.mouseButtonStates[
             e.button === 0 ? 'left' : e.button === 1 ? 'middle' : 'right'
             ] = true;
         });
         this.canvas.addEventListener('mouseup', (e) => {
+            e.preventDefault();
             this.mouseButtonStates[
             e.button === 0 ? 'left' : e.button === 1 ? 'middle' : 'right'
             ] = false;
@@ -64,11 +68,12 @@ class InputHandler {
         return this.mouseButtonStates[button];
     }
 
-    public isClicked(): boolean {
+    public isMouseDown(): boolean {
         return this.isMouseButtonDown('left') || 
                 this.isMouseButtonDown('middle') || 
                 this.isMouseButtonDown('right')
     }
+
 }
   
 export default InputHandler;

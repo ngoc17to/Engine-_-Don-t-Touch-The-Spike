@@ -1,5 +1,6 @@
 import GameObject from "../engine/core/GameObject";
 import AnimatedSprite from "../engine/rendering/AnimatedSprite";
+import Sprite from "../engine/rendering/Sprite";
 import SpriteSheet from "../engine/rendering/SpriteSheet";
 import { GameData } from "../types/general";
 
@@ -7,27 +8,36 @@ class Bird extends GameObject{
     public static bird: Bird
 
     private gameData: GameData
-    private sprites: {[direction: string]: AnimatedSprite} = {}
+    private flySprites: {[direction: string]: AnimatedSprite} = {}
+    private deadSprites: {[direction: string]: Sprite} = {}
     private state: 'start' | 'play' | 'dead'
     private isGoingUp: boolean
     private onDirectionChange: Event
 
     private constructor(gameData: GameData) {
-        super(50, 35, 'bird')
+        super(55, 50, 'bird')
         this.state = 'start'
         this.gameData = gameData
         this.onDirectionChange = new CustomEvent('directionChange');
 
         const spriteSheetImage = new Image()
-        spriteSheetImage.src = "../assets/images/birdFly.png"
-        const spriteSheet = new SpriteSheet(spriteSheetImage, 215, 153)
+        spriteSheetImage.src = "../assets/images/bird_jump.png"
+        const spriteSheet = new SpriteSheet(spriteSheetImage, 338, 321)
 
-        this.sprites = {
+        this.flySprites = {
             idle: new AnimatedSprite(spriteSheet, 0, 0),
             right: new AnimatedSprite(spriteSheet, 2, 300),
             left: new AnimatedSprite(spriteSheet, 2, 300, {flipped: true})
         }
 
+        const birdDead = new Image()
+        birdDead.src = "../assets/images/bird_dead.png"
+        
+        this.deadSprites = {
+            right: new Sprite(birdDead),
+            left: new Sprite(birdDead,{flipped: true})
+        }
+            
         this.isGoingUp = true
         this.resetBirdPosition()
     }
@@ -90,46 +100,60 @@ class Bird extends GameObject{
             } else {
                 // Bay xuống
                 this.updateVelocity(0.5)
-                if (this.velocity >= 30) {
+                if (this.velocity >= 40) {
                     this.isGoingUp = true
                 }
             }
             this.updateYPosition(this.velocity)
         }
         else{
+            console.log(this.getPosition().y,this.gameData.screenHeight)
+            if(this.getPosition().y <= this.gameData.screenHeight - this.gameData.screenHeight/4){
+                this.updateVelocity(0.5)
+                this.updateYPosition(this.velocity)
+            }
+            else{
 
+            }
         }
         this.setBoxCollider(this.width, this.height, this.getPosition().x, this.getPosition().y)
     }
 
     public render(ctx: CanvasRenderingContext2D, delta: number): void{
-        // if(this.isDead()){
-        //     this.gameData.gameOver = true
-        //     this.gameData.gameStart = false
-        // }
-        // if(this.gameData.gameOver){
-        //     this.resetBirdPosition()
-        //     this.gameData.direction = "RIGHT"
-        // }
         if(this.state == "start"){
             this.resetBirdPosition()
         }
         this.update(delta)
-        this.getMovingSprite().render(
-            ctx,
-            delta,
-            this.getPosition().x,
-            this.getPosition().y,
-            this.width,
-            this.height
-        )
+        if(this.state !== "dead"){
+            this.getMovingSprite().render(
+                ctx,
+                delta,
+                this.getPosition().x,
+                this.getPosition().y,
+                this.width,
+                this.height
+            )
+        }
+        else{
+            this.getSprite().render(
+                ctx,
+                this.getPosition().x,
+                this.getPosition().y,
+                this.width,
+                this.height
+            )
+        }
     }
 
     private getMovingSprite(): AnimatedSprite {
-        if(this.gameData.direction == "LEFT") return this.sprites["left"]
-        return this.sprites["right"]
+        if(this.gameData.direction == "LEFT") return this.flySprites["left"]
+        return this.flySprites["right"]
     }
 
+    private getSprite(): Sprite {
+        if(this.gameData.direction == "LEFT") return this.deadSprites["left"]
+        return this.deadSprites["right"]
+    }
 }
 
 export default Bird

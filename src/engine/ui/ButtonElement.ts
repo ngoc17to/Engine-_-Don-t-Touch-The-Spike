@@ -62,15 +62,20 @@ class ButtonElement extends UIElement{
 
     public handleClick(input: InputHandler): void {
         if(this.onClick){
-            if(this.isHovering(input.getMousePosition().x, input.getMousePosition().y)
-                && input.isClicked()
-            ){
-                this.onClick()
-            }
+            input.canvas.addEventListener('click', (e) => {
+                const mousePos = input.getMousePosition()
+                if(this.isHovering(mousePos.x, mousePos.y)) {
+                    input.canvas.style.cursor = 'pointer'
+                    this.onClick()
+                } 
+                else {
+                    input.canvas.style.cursor = 'default'
+                }
+            });
         }
-    }
-
-    private isHovering(x: number, y: number): boolean {
+      }
+      
+      private isHovering(x: number, y: number): boolean {
         if (
             x >= this.getPosition().x &&
             x <= this.getPosition().x + this.width &&
@@ -80,7 +85,7 @@ class ButtonElement extends UIElement{
             return true
         } 
         return false
-    }
+      }
 }
 
 export default ButtonElement

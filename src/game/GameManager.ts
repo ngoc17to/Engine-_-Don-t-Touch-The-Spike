@@ -16,8 +16,6 @@ class GameManager {
     public spikePool: SpikePool
     public background: Background
     public score: GameScore
-    public gameStart: boolean
-    public gameOver: boolean
     
     private constructor(canvasEl: HTMLCanvasElement) {
         if (GameManager.instance) {
@@ -35,8 +33,6 @@ class GameManager {
                 direction: "RIGHT",
             }
         }
-        this.gameStart = false
-        this.gameOver = false
         this.score = new GameScore()
         this.bird = Bird.getInstance(this.gameData)
         this.currentScene = ReadyScene.getInstance(this)
