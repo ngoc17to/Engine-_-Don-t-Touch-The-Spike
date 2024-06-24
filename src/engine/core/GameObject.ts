@@ -99,25 +99,6 @@ class GameObject{
         position.y += (deltaTime * vel)/1000
     }
 
-
-
-    public handleCollision(other: Collider): void {
-        const position = this.transform.getPosition()
-        const otherPosition = other.transform.getPosition()
-        if (
-            position.x >= otherPosition.x ||
-            position.x <= otherPosition.x + other.width
-        ) {
-            position.x = otherPosition.x - 1
-        }
-        if (
-            position.y >= otherPosition.y ||
-            position.y <= otherPosition.y + other.height
-        ) {
-            position.y = otherPosition.y - 1
-        }
-    }
-
     public render(ctx: CanvasRenderingContext2D, delta: number): void {
         if (!this.active) return
     }
