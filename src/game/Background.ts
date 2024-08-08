@@ -25,14 +25,14 @@ class Background{
             context.fillRect(0, 0, screenWidth, screenHeight);
 
             const background = new Image()
-            background.src = "../assets/images/background.png"
+            background.src = "/assets/images/background.png"
             context.drawImage(background, 0, 0, screenWidth, screenHeight)
 
             // Draw the white circle in the center
             const centerX = screenWidth / 2;
             const centerY = screenHeight / 2;
             const circle = new Image()
-            circle.src = "../assets/images/circle.png"
+            circle.src = "/assets/images/circle.png"
             context.drawImage(circle, centerX - screenWidth/4, centerY - screenWidth/4, screenWidth/2, screenWidth/2)
 
         }
