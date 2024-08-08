@@ -15,7 +15,7 @@ class Spike extends GameObject{
         this.gameData = gameData
 
         const spike = new Image()
-        spike.src = "/assets/images/spike.png"
+        spike.src = "../../assets/images/spike.png"
 
         this.sprites = {
             left: new Sprite(spike),
