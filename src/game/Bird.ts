@@ -21,7 +21,7 @@ class Bird extends GameObject{
         this.onDirectionChange = new CustomEvent('directionChange');
 
         const spriteSheetImage = new Image()
-        spriteSheetImage.src = "../../assets/images/bird_jump.png"
+        spriteSheetImage.src = "assets/images/bird_jump.png"
         const spriteSheet = new SpriteSheet(spriteSheetImage, 338, 321)
 
         this.flySprites = {
@@ -31,7 +31,7 @@ class Bird extends GameObject{
         }
 
         const birdDead = new Image()
-        birdDead.src = "../../assets/images/bird_dead.png"
+        birdDead.src = "assets/images/bird_dead.png"
         
         this.deadSprites = {
             right: new Sprite(birdDead),
@@ -107,7 +107,6 @@ class Bird extends GameObject{
             this.updateYPosition(this.velocity)
         }
         else{
-            console.log(this.getPosition().y,this.gameData.screenHeight)
             if(this.getPosition().y <= this.gameData.screenHeight - this.gameData.screenHeight/4){
                 this.updateVelocity(0.5)
                 this.updateYPosition(this.velocity)
